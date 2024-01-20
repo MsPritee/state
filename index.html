@@ -88,90 +88,31 @@
             updateVillageDropdown();
         }
 
-        // function updateVillageDropdown() {
-        //     if (selectedSubDistrict) {
-        //         const selectedDistrictData = jsonData.districts.find(
-        //             (district) => district.district === selectedDistrict
-        //         );
-        //         const selectedSubDistrictData = selectedDistrictData.subDistricts.find(
-        //             (subDistrict) => subDistrict.subDistrict === selectedSubDistrict
-        //         );
-        //         const villageOptions = selectedSubDistrictData.villages;
-        //         populateDropdown(villageDropdown, ["", ...villageOptions]);
-        //         selectedVillage = "";
-        //     } else {
-        //         populateDropdown(villageDropdown, [""]);
-        //         selectedVillage = "";
-        //     }
-        // }
+       function updateVillageDropdown() {
+            if (selectedSubDistrict) {
+                const selectedDistrictData = jsonData.districts.find(
+                    (district) => district.district === selectedDistrict
+                );
+                const selectedSubDistrictData = selectedDistrictData.subDistricts.find(
+                    (subDistrict) => subDistrict.subDistrict === selectedSubDistrict
+                );
 
-        //  function updateVillageDropdown() {
-        //         if (selectedSubDistrict) {
-        //             const selectedDistrictData = jsonData.districts.find(
-        //                 (district) => district.district === selectedDistrict
-        //             );
-        //             const selectedSubDistrictData = selectedDistrictData.subDistricts.find(
-        //                 (subDistrict) => subDistrict.subDistrict === selectedSubDistrict
-        //             );
+                // const villageOptions = ["", selectedSubDistrict, ...selectedSubDistrictData.villages];
+                const villageOptions = ["", ...selectedSubDistrictData.villages];
 
-        //             const villageOptions = ["", selectedSubDistrict, ...selectedSubDistrictData.villages];
+                if (!villageOptions.includes(selectedSubDistrict)) {
+                    villageOptions.push(selectedSubDistrict);
+                }
 
-        //             populateDropdown(villageDropdown, villageOptions);
-        //             selectedVillage = "";
-        //         } else {
-        //             populateDropdown(villageDropdown, [""]);
-        //             selectedVillage = "";
-        //         }
-        //     }
+                villageOptions.sort();
 
-
-    function updateVillageDropdown() {
-        if (selectedSubDistrict) {
-            const selectedDistrictData = jsonData.districts.find(
-                (district) => district.district === selectedDistrict
-            );
-            const selectedSubDistrictData = selectedDistrictData.subDistricts.find(
-                (subDistrict) => subDistrict.subDistrict === selectedSubDistrict
-            );
-
-            const villageOptions = ["", selectedSubDistrict, ...selectedSubDistrictData.villages];
-
-            villageOptions.sort();
-
-            populateDropdown(villageDropdown, villageOptions);
-            selectedVillage = "";
-        } else {
-            populateDropdown(villageDropdown, [""]);
-            selectedVillage = "";
+                populateDropdown(villageDropdown, villageOptions);
+                selectedVillage = "";
+            } else {
+                populateDropdown(villageDropdown, [""]);
+                selectedVillage = "";
+            }
         }
-    }
-
-    // function updateVillageDropdown() {
-    //         if (selectedSubDistrict) {
-    //             const selectedDistrictData = jsonData.districts.find(
-    //                 (district) => district.district === selectedDistrict
-    //             );
-    //             const selectedSubDistrictData = selectedDistrictData.subDistricts.find(
-    //                 (subDistrict) => subDistrict.subDistrict === selectedSubDistrict
-    //             );
-
-    //             const villageOptions = ["", ...selectedSubDistrictData.villages];
-
-    //             // Add the sub-district name to the village list if not already present
-    //             if (!villageOptions.includes(selectedSubDistrict)) {
-    //                 villageOptions.push(selectedSubDistrict);
-    //             }
-
-    //             villageOptions.sort();
-
-    //             populateDropdown(villageDropdown, villageOptions);
-    //             selectedVillage = "";
-    //         } else {
-    //             populateDropdown(villageDropdown, [""]);
-    //             selectedVillage = "";
-    //         }
-    //     }
-
 
 
         districtDropdown.addEventListener("change", () => {
