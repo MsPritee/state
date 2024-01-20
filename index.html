@@ -24,6 +24,11 @@
 <body>
 
     <div id="app">
+        <label for="stateDropdown">Select State:</label>
+        <select id="stateDropdown"></select>
+
+        <br />
+
         <label for="districtDropdown">Select District:</label>
         <select id="districtDropdown"></select>
 
@@ -42,8 +47,11 @@
         <button type="text" onclick="handleSelect()">Select</button>
     </div>
 
+
+    <script type="module" src="./stateConfig.js"></script>
+
     <script>
-    // import stateConfig from './stateConfig.js';
+        // import stateConfig from './stateConfig.js';
 
         // let selectedState = "";
         let selectedDistrict = "";
@@ -69,6 +77,8 @@
             console.log("Selected District:", selectedDistrict);
             console.log("Selected Sub-District:", selectedSubDistrict);
             console.log("Selected Village:", selectedVillage);
+
+            
         }
 
         function updateSubDistrictDropdown() {
@@ -76,11 +86,15 @@
                 const selectedDistrictData = jsonData.districts.find(
                     (district) => district.district === selectedDistrict
                 );
+                if (selectedDistrictData) {
                 const subDistrictOptions = selectedDistrictData.subDistricts.map(
                     (subDistrict) => subDistrict.subDistrict
                 );
                 populateDropdown(subDistrictDropdown, ["", ...subDistrictOptions]);
                 selectedSubDistrict = "";
+                }else {
+                    console.error("selected dist data not found")
+                }
             } else {
                 populateDropdown(subDistrictDropdown, [""]);
                 selectedSubDistrict = "";
@@ -88,7 +102,7 @@
             updateVillageDropdown();
         }
 
-       function updateVillageDropdown() {
+        function updateVillageDropdown() {
             if (selectedSubDistrict) {
                 const selectedDistrictData = jsonData.districts.find(
                     (district) => district.district === selectedDistrict
@@ -130,16 +144,57 @@
         });
 
 
-        fetch('MH.json')
-            .then(response => response.json())
-            .then(data => {
+         document.addEventListener("DOMContentLoaded", async function () {
+                try {
+                    
+                    const { default: stateConfig } = await import('./stateConfig.js');                    
+                    const stateDropdown = document.getElementById('stateDropdown');                    
+                    stateConfig.forEach(state => {
+                        const option = document.createElement('option');
+                        option.value = state.path;
+                        option.textContent = state.name;
+                        stateDropdown.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error(error);
+                }
+            });
 
-                jsonData = data;
+            stateDropdown.addEventListener("change", () => {
+                    const selectedStatePath = stateDropdown.value;
+                    if (selectedStatePath) {
+                        fetch(selectedStatePath)
+                            .then(response => response.json())
+                            .then(data => {
+                                jsonData = data; 
+                                const districtOptions = ["", ...data.districts.map(district => district.district)];
+                                populateDropdown(districtDropdown, districtOptions);
+                                selectedDistrict = "";
+                                updateSubDistrictDropdown();
+                            })
+                            .catch(error => console.error('Error loading JSON:', error));
+                    } else {
+                        populateDropdown(districtDropdown, [""]);
+                        selectedDistrict = "";
+                        updateSubDistrictDropdown();
+                    }
+                });
 
-                const districtOptions = jsonData.districts.map((district) => district.district);
-                populateDropdown(districtDropdown, ["", ...districtOptions]);
-            })
-            .catch(error => console.error('Error loading JSON:', error));
+
+                
+
+
+        // fetch('MH.json')
+        //     .then(response => response.json())
+        //     .then(data => {
+
+        //         jsonData = data;
+
+        //         const districtOptions = jsonData.districts.map((district) => district.district);
+        //         populateDropdown(districtDropdown, ["", ...districtOptions]);
+        //     })
+        //     .catch(error => console.error('Error loading JSON:', error));
+        
     </script>
 
 </body>
